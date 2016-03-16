@@ -1,0 +1,45 @@
+
+
+/* Put your custom styles here */
+
+body
+{
+    background-color: #222;
+}
+
+.content-block
+{
+    background-color: transparent;
+}
+
+#container
+{
+    background-color: rgba(153, 195, 141, 0.61);
+    position: relative;
+}
+
+#container canvas, #overlay
+{
+    position: absolute;
+}
+
+#container #overlay
+{
+    z-index: 1000;
+    width: 100%;
+}
+
+#container canvas
+{
+    z-index: 0;
+}
+
+.category
+{
+    font-size: 36pt;
+}
+
+.category-col
+{
+}
+
