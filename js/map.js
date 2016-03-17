@@ -34,11 +34,6 @@ function init() {
 
     document.getElementById( "container" ).appendChild(renderer.domElement);
 
-    // add orbit control
-    // orbit = new THREE.OrbitControls(camera, renderer.domElement);
-    // orbit.enableZoom = true;
-    // orbit.enableRotate = true;
-
     raycaster = new THREE.Raycaster();
 
     // load data and construct map geometry
@@ -61,6 +56,54 @@ function init() {
         var t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
 
         projection.scale(s).translate(t);
+
+        var updatedBound = path.bounds(jsonData);
+        var min = updatedBound[0];
+        var max = updatedBound[1];
+        particleSystems = new THREE.Object3D();
+
+        var positions = [];
+        // add particles after the projection is calculated.
+        d3.json("data/social.json", function(error, socialData) {
+            if (error) throw error;
+            // Project social media latlng to 3d coordinates
+            for (var media in socialData) {
+                var particlesGeometry = new THREE.Geometry();
+                for (var i = 0; i < socialData[media].length; i++) {
+                    try {
+                        var latlng = [Number(socialData[media][i][1]),Number(socialData[media][i][0])];
+                        var coordinates = projection(latlng);
+
+                        // Only add point that's within the bound of Bernallio county.
+                        if (min[0]<coordinates[0] && coordinates[0] < max[0] && min[1]<coordinates[1] && coordinates[1] < max[1]){
+                            var particle = new THREE.Vector3(coordinates[0], coordinates[1], 0);
+                            particlesGeometry.vertices.push(particle);
+
+                        }
+                        if (isNaN(coordinates[0]) || isNaN(coordinates[1])) throw 'nan';
+                    }
+                    catch(err) {
+                        console.log(err);
+                        continue;
+                    }
+                }
+
+                var pMaterial = new THREE.PointsMaterial({
+                    color: 0xa2f153, // twitter color
+                      size: 0.2
+                    });
+
+                if (media === 'facebook') {
+                    pMaterial.color.setHex(0x5fccf5); // Facebook color
+                }
+                console.log(particleSystems);
+                var particleSystem = new THREE.Points(particlesGeometry,pMaterial);
+                particleSystems.add(particleSystem);
+            }
+
+            scene.add(particleSystems);
+        });
+
         // now convert geojson coordinates to a shape path.
         var pathString = path(jsonData);
 
@@ -78,13 +121,14 @@ function init() {
         var totalPopulation = 0;
 
         mapGroup = new THREE.Object3D();
+        var edgeHelperGroup = new THREE.Object3D();
         for (i = 0; i < shapes.length; i++) {
             var geometry = new THREE.ExtrudeGeometry(shapes[i], extrudeOptions);
 
             var baseMaterial = new THREE.MeshPhongMaterial({color:0x00ee00});
             var mesh = new THREE.Mesh(geometry);
 
-            mesh.material.opacity = 0.75;
+            mesh.material.opacity = 0;//0.75;
             mesh.material.transparent = true;
             mesh.material.polygonOffset = true;
             mesh.material.polygonOffsetFactor = 1;
@@ -100,7 +144,7 @@ function init() {
             // edges.material.side = THREE.Front;
 
             mesh.edgeHelper = edges;
-            scene.add( edges );
+            edgeHelperGroup.add( edges );
 
             // census info:
             var census = {};
@@ -108,9 +152,10 @@ function init() {
 
             totalPopulation += population;
             mesh.census = {population: population, featureIndex:i};
-
             mapGroup.add(mesh);
         }
+
+        scene.add(edgeHelperGroup);
 
         mapColor('population');
 
@@ -124,9 +169,11 @@ function init() {
         mat.setPosition({
             x: -center.x,
             y: center.y,
-            z: -0.05
+            z: 0
         });
         mapGroup.applyMatrix(mat);
+        particleSystems.applyMatrix(mat);
+        particleSystems.position.z = 0.2;
 
         // add object to scene and start the render loop.
         scene.add(mapGroup);
@@ -153,15 +200,22 @@ function animateCamera() {
     camAnim1.onComplete(function(){
         $('#overlay').fadeIn(300, function() {
             window.addEventListener('mousemove', onMouseMove, false);
+            addOrbitControl();
         });
     });
 
-    var camAnim2 = new TWEEN.Tween(target).to({x: 0.5, y: 4, z: 1}, 3000);
+    var camAnim2 = new TWEEN.Tween(target).to({x: 0.5, y: 4, z: 1}, 2600);
     camAnim2.easing(TWEEN.Easing.Cubic.InOut);
     camAnim2.delay(1000);
 
     camAnim1.start();
     camAnim2.start();
+}
+
+function addOrbitControl() {
+    orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableZoom = true;
+    orbit.enableRotate = true;
 }
 
 function mapColor(property) {
@@ -195,7 +249,6 @@ function mapColor(property) {
 }
 
 var pickedMesh, lastPickedMesh;
-
 function checkForInterections() {
     // calculate objects intersecting the picking ray
     camera.updateProjectionMatrix();
