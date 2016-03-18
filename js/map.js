@@ -2,7 +2,6 @@
 var scene;
 var camera;
 var renderer;
-var controll;
 var orbit;
 
 var mouse = new THREE.Vector2();
@@ -13,8 +12,6 @@ var projection;
 var features;
 
 var showParticles = false;
-
-//var gui = new dat.GUI();
 
 function init() {
     $('#overlay').hide();
@@ -72,6 +69,7 @@ function init() {
         // add particles after the projection is calculated.
         d3.json("data/social.json", function(error, socialData) {
             if (error) throw error;
+
             // Project social media latlng to 3d coordinates
             for (var media in socialData) {
                 for (var i = 0; i < socialData[media].length; i++) {
@@ -79,7 +77,7 @@ function init() {
                         var latlng = [Number(socialData[media][i][1]), Number(socialData[media][i][0])];
                         var coordinates = projection(latlng);
 
-                        // Only add point that's within the bound of Bernallio county.
+                        // Only add point that's within the bound of Bernalillo county.
                         if (min[0] < coordinates[0] && coordinates[0] < max[0] && min[1] < coordinates[1] && coordinates[1] < max[1]) {
                             var particle = new THREE.Vector3(coordinates[0], coordinates[1], 0);
                             particle.velocity = new THREE.Vector3(0, 0, -Math.random() * 0.5);
@@ -203,7 +201,6 @@ function animateCamera() {
 
     camAnim1.easing(TWEEN.Easing.Cubic.InOut);
     camAnim1.delay(1000);
-    camAnim1.onComplete(camAnimationCompleted);
 
     var camAnim2 = new TWEEN.Tween(target).to({
         x: 0.5,
@@ -212,6 +209,7 @@ function animateCamera() {
     }, 3000);
     camAnim2.easing(TWEEN.Easing.Cubic.InOut);
     camAnim2.delay(1000);
+    camAnim2.onComplete(camAnimationCompleted);
 
     camAnim1.start();
     camAnim2.start();
