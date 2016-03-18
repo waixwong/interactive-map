@@ -7,6 +7,48 @@ body
     background-color: #222;
 }
 
+h1, h2
+{
+    font-family: 'Roboto', Helvetica, "Open Sans",  Arial, sans-serif;
+    font-weight: 300;
+}
+
+.census-tract
+{
+    font-size: 16pt;
+    color: #555;
+}
+
+.census-tract i
+{
+    color: #f241a8;
+}
+
+.counter-block .fa
+{
+    color: #555555;
+    font-size: 30pt;
+}
+
+.counter-block .counter-icon
+{
+    margin-top: 20px;
+}
+
+.content-2-7 .counter
+{
+    font-size: 20pt;
+    color: #555555;
+    font-family: roboto;
+    font-weight: 300;
+}
+
+.content-3-8 .underlined-title hr
+{
+    width: 20%;
+    border-top: 3px solid #f241a8;
+}
+
 .content-block
 {
     background-color: transparent;
@@ -39,7 +81,54 @@ body
     font-size: 36pt;
 }
 
-.category-col
+.header
+{
+    padding-bottom: 0;
+}
+
+.counter
+{
+    font-size: 20px;
+    color: #555;
+}
+
+.activated
+{
+    color: #f241a8;
+}
+
+.counter-block
+{
+    border: 2px solid #202020;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.underlined-title .subtitle
+{
+    font-weight: 300;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.first-counter
+{
+    padding-left: 0;
+}
+
+.counter
 {
 }
 
+.copyright-bar
+{
+    position: fixed;
+}
+
+.showbtn
+{
+    border: 2px solid #f241a8;
+    background: transparent;
+    color: #666;
+    margin-top: 5px;
+}

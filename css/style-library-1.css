@@ -19,12 +19,12 @@ body
     color: #333333;
     background: #ffffff;
     overflow-x: hidden;
-    /*text-rendering: optimizeLegibility;*/
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 /* BACKGROUND COLORS */
+
 .bg-transparent
 {
     background-color: transparent !important;
@@ -155,8 +155,6 @@ body
     background-color: #31152B !important;
 }
 
-
-
 .bg-transparent-hover:hover
 {
     background-color: transparent !important;
@@ -286,7 +284,6 @@ body
 {
     background-color: #31152B !important;
 }
-
 
 /* BG COVER - MTCH */
 
@@ -424,7 +421,6 @@ body
     color: #31152B !important;
 }
 
-
 .black-hover:hover
 {
     color: #111111 !important;
@@ -550,11 +546,12 @@ body
     color: #31152B !important;
 }
 
-.no-shadow {
+.no-shadow
+{
     box-shadow: none !important;
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
-    -ms-box-shadow:none !important;
+    -ms-box-shadow: none !important;
 }
 
 /* PADDING, MARGIN & ALIGNMENT */
@@ -563,6 +560,7 @@ body
 {
     padding-top: 0px !important;
 }
+
 .pad5
 {
     padding-top: 5px !important;
@@ -612,6 +610,7 @@ body
 {
     padding-bottom: 0px !important;
 }
+
 .pad-bottom5
 {
     padding-bottom: 5px !important;
@@ -661,6 +660,7 @@ body
 {
     margin-bottom: 0px !important;
 }
+
 .margin-bottom5
 {
     margin-bottom: 5px !important;
@@ -680,7 +680,6 @@ body
 {
     margin-bottom: 20px !important;
 }
-
 
 .margin-bottom25
 {
@@ -711,6 +710,7 @@ body
 {
     margin-top: 0px !important;
 }
+
 .margin-top5
 {
     margin-top: 5px !important;
@@ -796,48 +796,40 @@ body
     min-height: 800px !important;
 }
 
-@media only screen and (max-width : 767px){
-
+@media only screen and (max-width : 767px)
+{
     .min-height-xs-100px
     {
         min-height: 100px !important;
     }
-
     .min-height-xs-200px
     {
         min-height: 200px !important;
     }
-
     .min-height-xs-300px
     {
         min-height: 300px !important;
     }
-
     .min-height-xs-400px
     {
         min-height: 400px !important;
     }
-
     .min-height-xs-500px
     {
         min-height: 500px !important;
     }
-
     .min-height-xs-600px
     {
         min-height: 600px !important;
     }
-
     .min-height-xs-700px
     {
         min-height: 700px !important;
     }
-
     .min-height-xs-800px
     {
         min-height: 800px !important;
     }
-
 }
 
 .marg-bottom5
@@ -924,7 +916,6 @@ h6, .h6
 
 p
 {
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     line-height: 1.6;
     margin: 15px 0;
@@ -952,9 +943,13 @@ em
 
 /* LINKS */
 
-a { color: #1abc9c; }
+a
+{
+    color: #1abc9c;
+}
 
-a:hover {
+a:hover
+{
     color: #16a085;
     text-decoration: none;
     -moz-transition: all 0.3s ease;
@@ -962,6 +957,7 @@ a:hover {
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
+
 /* LISTS */
 
 ol
@@ -980,7 +976,6 @@ ul
 ul li,
 ol li
 {
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     color: #515157;
     margin-bottom: 5px;
@@ -1015,7 +1010,7 @@ ul.circle li:before
 {
     font-size: 20px;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: normal;
     color: #95a5a6;
 }
 
@@ -1042,7 +1037,6 @@ img
     color: #FFF;
     padding: 10px 20px;
     margin: 15px 0;
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -1187,17 +1181,14 @@ p .btn
 
 .btn-outline
 {
-    color: #FFF;
     padding: 12px 20px;
     margin: 15px 0;
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
-    font-weight: 600;
+    font-weight: normal;
     font-size: 14px;
     text-align: center;
     letter-spacing: 0.1em;
     text-shadow: none;
     border: none;
-    text-transform: uppercase;
     border-radius: 25px;
     -webkit-border-radius: 25px;
     -moz-border-radius: 25px;
@@ -1392,7 +1383,6 @@ fieldset legend
 {
     border: 2px solid #ecf0f1;
     color: #34495e;
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     line-height: 1.467;
     padding: 8px 12px;
@@ -1701,7 +1691,6 @@ fieldset[disabled] .form-control
 
 .panel-title
 {
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 15px;
     font-weight: 700;
     text-transform: uppercase;
@@ -1852,7 +1841,6 @@ fieldset[disabled] .form-control
 
 .pagination li a
 {
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     color: #16A085;
     background: none;
@@ -1916,7 +1904,6 @@ fieldset[disabled] .form-control
     border: 1px solid #16A085;
     border-radius: 0;
     color: #16A085;
-    /*font-family: "Open Sans", Helvetica, Arial, sans-serif;*/
     font-size: 14px;
     min-width: 160px;
 }

@@ -17,6 +17,9 @@ var showParticles = false;
 //var gui = new dat.GUI();
 
 function init() {
+    $('#overlay').hide();
+    $('.census-tract').hide();
+
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -40,7 +43,7 @@ function init() {
     raycaster = new THREE.Raycaster();
 
     // load data and construct map geometry
-    d3.json("data/BernallioCensusBlocks_Joined.json", function(error, jsonData) {
+    d3.json("data/CensusBlocks.json", function(error, jsonData) {
         if (error) throw error;
 
         features = jsonData.features;
@@ -90,25 +93,19 @@ function init() {
                         continue;
                     }
                 }
-
-
-                //
-                // if (media === 'facebook') {
-                //     pMaterial.color.setHex(0x5fccf5); // Facebook color
-                // }
             }
 
             var pMaterial = new THREE.PointsMaterial({
-                color: 0xeafcd9, // twitter color
+                color: 0x5fccf5, // twitter color
                   size: 0.2,
                   blending: THREE.AdditiveBlending,
-                  transparent: true
+                  transparent: true,
+                  opacity: 0.5
                 });
 
             particleSystem.geometry = particles;
             particleSystem.material = pMaterial;
             scene.add(particleSystem);
-            console.log(particleSystem);
         });
 
         // now convert geojson coordinates to a shape path.
@@ -125,7 +122,7 @@ function init() {
         };
 
         // group all shapes
-        var totalPopulation = 0;
+        statistics = jsonData.statistics;
 
         mapGroup = new THREE.Object3D();
         var edgeHelperGroup = new THREE.Object3D();
@@ -148,17 +145,27 @@ function init() {
 
             // census info:
             var census = {};
+            var tract = features[i].properties.TRACTCE;
             var population = Number(features[i].properties.ACS_13_5YR_B01001_with_ann_HD01_VD01);
+            var male = Number(features[i].properties.ACS_13_5YR_B01001_with_ann_HD01_VD02);
+            var female = Number(features[i].properties.ACS_13_5YR_B01001_with_ann_HD01_VD26);
 
-            totalPopulation += population;
-            mesh.census = {population: population, featureIndex:i};
+            // push some extra census data into mesh object
+            mesh.census = {
+                featureIndex: i,
+                tract: tract,
+                population: population,
+                male: male,
+                female: female,
+                proportion_to_max_population: population/statistics.max_population,
+                proportion_to_max_male: male/statistics.max_population,
+                proportion_to_max_female: female/statistics.max_population
+            };
             mapGroup.add(mesh);
         }
 
         scene.add(mapGroup);
         scene.add(edgeHelperGroup);
-
-        mapColor('population');
 
         // find the center of the group and apply transform so that
         // the mesh appears at the world origin.
@@ -191,12 +198,9 @@ function animateCamera() {
         camera.lookAt(target);
     });
 
-    $('#overlay').hide();
-
     camAnim1.easing(TWEEN.Easing.Cubic.InOut);
     camAnim1.delay(1000);
     camAnim1.onComplete(camAnimationCompleted);
-
 
     var camAnim2 = new TWEEN.Tween(target).to({x: 0.5, y: 4, z: 1}, 2600);
     camAnim2.easing(TWEEN.Easing.Cubic.InOut);
@@ -210,36 +214,6 @@ function addOrbitControl() {
     orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableZoom = true;
     orbit.enableRotate = true;
-}
-
-function mapColor(property) {
-    var minColor = 'hsl(129, 29%, 53%)';
-    var maxColor = 'hsl(14, 72%, 61%)';
-
-    var maxValue = 0, minValue = 1000000;
-    for (i=0; i<mapGroup.children.length; i++) {
-        var value = mapGroup.children[i].census[property];
-        if (value > maxValue) {
-            maxValue = value;
-        }
-        else if (value < minValue) {
-            minValue = value;
-        }
-    }
-
-    for (i=0; i < mapGroup.children.length; i++) {
-        var value = mapGroup.children[i].census.population;
-        var interp = (value-minValue)/(maxValue-minValue);
-        // store this interp value
-        mapGroup.children[i].census.interp = interp;
-
-        var color = interpolateColor(minColor, maxColor, interp);
-        // set color to the material;
-        // color = new THREE.Color(color);
-        // mapGroup.children[i].material.color = color;
-        // //mapGroup.children[i].material.opacity = 0.1;
-        // mapGroup.children[i].edgeHelper.material.color = color;
-    }
 }
 
 function animateParticles () {
@@ -288,25 +262,68 @@ function updateInfoOnScreen() {
     if (pickedMesh) {
         var index = pickedMesh.census.featureIndex;
         // find out county name:
-        var tract = pickedMesh.census.population;
-        $('#tract').text('Census Tract ' + tract);
+        var population = pickedMesh.census.population;
+
+        $('#total-counter').addClass('activated').text( pickedMesh.census.population );
+        $('#male-counter').addClass('activated').text( pickedMesh.census.male );
+        $('#female-counter').addClass('activated').text( pickedMesh.census.female );
+        $('.census-tract').show();
+        $('.census-tract>i').text(pickedMesh.census.tract);
     }
+
     else {
-        $('#tract').text('Hover on map to see more.');
+        resetInfoOnScreen();
     }
 }
 
+function resetInfoOnScreen() {
+    $('.counter').each(function() {
+        $(this).text($(this).attr('property'));
+        $(this).removeClass('activated');
+    });
+
+    $('.census-tract').hide();
+}
+
 function camAnimationCompleted() {
-    $('.ageGroup').hover(function(){
-    animateAllMapObjectsIn();
-    }, function() {
+    // mouseIn event
+    $('.counter-trigger').hover(function(){
+        // set counter value
+        var target = $('#'+this.getAttribute('target'));
+        var property = target.attr('property');
+        var value = statistics[property];
+        target.text(value);
+        target.addClass('activated');
+
+        // temporarily pause ray-mesh interesection check
+        window.removeEventListener('mousemove', onMouseMove, false);
+
+        // start animation
+        animateAllMapObjectsIn(property);
+
+    },
+    // mouseOut event
+    function() {
     animateAllMapObjectsOut();
+    // resume intersection check.
+    window.addEventListener('mousemove', onMouseMove, false);
     });
 
     $('#overlay').fadeIn(300, function() {
         window.addEventListener('mousemove', onMouseMove, false);
-        showParticles = true;
         //addOrbitControl();
+    });
+
+    // add button click event
+    $('.showbtn').click(function() {
+        if (showParticles) {
+            showParticles = false;
+            scene.remove(particleSystem);
+        }
+        else {
+            showParticles = true;
+            scene.add(particleSystem);
+        }
     });
 }
 
@@ -315,7 +332,7 @@ function animateMapObjects() {
     TWEEN.update();
 
     if (!pickedMesh && !lastPickedMesh) {
-        // the variable is defined
+        // if nothing is selected
         return;
     }
 
@@ -341,13 +358,15 @@ function animateMapObjects() {
     }
 }
 
-function animateAllMapObjectsIn()
+function animateAllMapObjectsIn(property)
 {
+    var key = 'proportion_to_max_'+ property;
     TWEEN.removeAll();
     for (i = 0; i < mapGroup.children.length; i++) {
         var mesh = mapGroup.children[i];
+        var proportion = mesh.census[key];
         var globalAnim = new TWEEN.Tween(mesh.scale);
-        globalAnim.to({z: 15*mesh.census.interp+0.001}, duration);
+        globalAnim.to({z: 14*proportion + 1}, duration);
         globalAnim.easing(TWEEN.Easing.Cubic.InOut);
         globalAnim.start();
     }
