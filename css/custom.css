@@ -1,132 +1,84 @@
-
-
 /* Put your custom styles here */
 
-body
-{
+body {
     background-color: #222;
 }
-
-h1, h2
-{
-    font-family: 'Roboto', Helvetica, "Open Sans",  Arial, sans-serif;
+h1, h2 {
+    font-family: 'Roboto', Helvetica, "Open Sans", Arial, sans-serif;
     font-weight: 300;
 }
-
-.census-tract
-{
+.census-tract {
     font-size: 16pt;
     color: #555;
 }
-
-.census-tract i
-{
+.census-tract i {
     color: #f241a8;
 }
-
-.counter-block .fa
-{
+.counter-block .fa {
     color: #555555;
     font-size: 30pt;
 }
-
-.counter-block .counter-icon
-{
+.counter-block .counter-icon {
     margin-top: 20px;
 }
-
-.content-2-7 .counter
-{
+.content-2-7 .counter {
     font-size: 20pt;
     color: #555555;
     font-family: roboto;
     font-weight: 300;
 }
-
-.content-3-8 .underlined-title hr
-{
+.content-3-8 .underlined-title hr {
     width: 20%;
     border-top: 3px solid #f241a8;
 }
-
-.content-block
-{
+.content-block {
     background-color: transparent;
 }
-
-#container
-{
+#container {
     background-color: rgba(153, 195, 141, 0.61);
     position: relative;
 }
-
-#container canvas, #overlay
-{
+#container canvas, #overlay {
     position: absolute;
 }
-
-#container #overlay
-{
+#container #overlay {
     z-index: 1000;
     width: 100%;
 }
-
-#container canvas
-{
+#container canvas {
     z-index: 0;
 }
-
-.category
-{
+.category {
     font-size: 36pt;
 }
-
-.header
-{
+.header {
     padding-bottom: 0;
 }
-
-.counter
-{
+.counter {
     font-size: 20px;
     color: #555;
 }
-
-.activated
-{
+.activated {
     color: #f241a8;
 }
-
-.counter-block
-{
+.counter-block {
     border: 2px solid #f241a8;
     border-radius: 10px;
     margin-top: 20px;
 }
-
-.underlined-title .subtitle
-{
+.underlined-title .subtitle {
     font-weight: 300;
     color: #888;
     margin-bottom: 10px;
 }
-
-.first-counter
-{
+.first-counter {
     padding-left: 0;
 }
-
-.counter
-{
-}
-
-.copyright-bar
-{
+.counter {}
+.copyright-bar {
     position: fixed;
 }
-
-.showbtn
-{
+.showbtn {
     border: 2px solid #f241a8;
     background: transparent;
     color: #666;

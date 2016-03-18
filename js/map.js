@@ -27,7 +27,7 @@ function init() {
     camera.position.y = -5;
     camera.position.z = 10;
     camera.setLens(100);
-    var target = new THREE.Vector3(1,1,0);
+    var target = new THREE.Vector3(1, 1, 0);
     camera.lookAt(target);
 
     // initialize renderer and add to the html element
@@ -38,7 +38,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x151515);
 
-    document.getElementById( "container" ).appendChild(renderer.domElement);
+    document.getElementById("container").appendChild(renderer.domElement);
 
     raycaster = new THREE.Raycaster();
 
@@ -76,19 +76,18 @@ function init() {
             for (var media in socialData) {
                 for (var i = 0; i < socialData[media].length; i++) {
                     try {
-                        var latlng = [Number(socialData[media][i][1]),Number(socialData[media][i][0])];
+                        var latlng = [Number(socialData[media][i][1]), Number(socialData[media][i][0])];
                         var coordinates = projection(latlng);
 
                         // Only add point that's within the bound of Bernallio county.
-                        if (min[0]<coordinates[0] && coordinates[0] < max[0] && min[1]<coordinates[1] && coordinates[1] < max[1]){
+                        if (min[0] < coordinates[0] && coordinates[0] < max[0] && min[1] < coordinates[1] && coordinates[1] < max[1]) {
                             var particle = new THREE.Vector3(coordinates[0], coordinates[1], 0);
-                            particle.velocity = new THREE.Vector3(0,0,-Math.random()*0.5);
+                            particle.velocity = new THREE.Vector3(0, 0, -Math.random() * 0.5);
                             particles.vertices.push(particle);
 
                         }
                         if (isNaN(coordinates[0]) || isNaN(coordinates[1])) throw 'nan';
-                    }
-                    catch(err) {
+                    } catch (err) {
                         console.log(err);
                         continue;
                     }
@@ -97,11 +96,11 @@ function init() {
 
             var pMaterial = new THREE.PointsMaterial({
                 color: 0x5fccf5, // twitter color
-                  size: 0.2,
-                  blending: THREE.AdditiveBlending,
-                  transparent: true,
-                  opacity: 0.5
-                });
+                size: 0.2,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                opacity: 0.5
+            });
 
             particleSystem.geometry = particles;
             particleSystem.material = pMaterial;
@@ -130,18 +129,18 @@ function init() {
             var geometry = new THREE.ExtrudeGeometry(shapes[i], extrudeOptions);
             var mesh = new THREE.Mesh(geometry);
 
-            mesh.material.opacity = 0.75;//0.75;
+            mesh.material.opacity = 0.75; //0.75;
             mesh.material.transparent = true;
             mesh.material.polygonOffset = true;
             mesh.material.polygonOffsetFactor = 1;
             mesh.material.polygonOffsetUnits = 2;
             mesh.material.side = THREE.DoubleSide;
 
-            var edges = new THREE.EdgesHelper( mesh, mesh.material.color.clone().multiplyScalar(0.7), 65);
+            var edges = new THREE.EdgesHelper(mesh, mesh.material.color.clone().multiplyScalar(0.7), 65);
             edges.material.linewidth = 1;
 
             mesh.edgeHelper = edges;
-            edgeHelperGroup.add( edges );
+            edgeHelperGroup.add(edges);
 
             // census info:
             var census = {};
@@ -157,9 +156,9 @@ function init() {
                 population: population,
                 male: male,
                 female: female,
-                proportion_to_max_population: population/statistics.max_population,
-                proportion_to_max_male: male/statistics.max_population,
-                proportion_to_max_female: female/statistics.max_population
+                proportion_to_max_population: population / statistics.max_population,
+                proportion_to_max_male: male / statistics.max_population,
+                proportion_to_max_female: female / statistics.max_population
             };
             mapGroup.add(mesh);
         }
@@ -191,10 +190,14 @@ function init() {
 }
 
 function animateCamera() {
-    var target = new THREE.Vector3(1,1,0);
+    var target = new THREE.Vector3(1, 1, 0);
 
     var camAnim1 = new TWEEN.Tween(camera.position);
-    camAnim1.to({x: 0.5, y:-45, z:45}, 3000).onUpdate(function (){
+    camAnim1.to({
+        x: 0.5,
+        y: -45,
+        z: 45
+    }, 3000).onUpdate(function() {
         camera.lookAt(target);
     });
 
@@ -202,7 +205,11 @@ function animateCamera() {
     camAnim1.delay(1000);
     camAnim1.onComplete(camAnimationCompleted);
 
-    var camAnim2 = new TWEEN.Tween(target).to({x: 0.5, y: 4, z: 1}, 2600);
+    var camAnim2 = new TWEEN.Tween(target).to({
+        x: 0.5,
+        y: 4,
+        z: 1
+    }, 2600);
     camAnim2.easing(TWEEN.Easing.Cubic.InOut);
     camAnim2.delay(1000);
 
@@ -216,31 +223,32 @@ function addOrbitControl() {
     orbit.enableRotate = true;
 }
 
-function animateParticles () {
+function animateParticles() {
     var pCount = particles.vertices.length;
 
     while (pCount--) {
-      // get the particle
-      var particle = particles.vertices[pCount];
+        // get the particle
+        var particle = particles.vertices[pCount];
 
-      // check if we need to reset
-      if (particle.z < -10.0) {
-          particle.z = 0;
-          particle.velocity.z = 0;
-      }
+        // check if we need to reset
+        if (particle.z < -10.0) {
+            particle.z = 0;
+            particle.velocity.z = 0;
+        }
 
-      // update the velocity with a splat of randomniz
-      particle.velocity.z -= Math.random() * 0.01;
+        // update the velocity with a splat of randomniz
+        particle.velocity.z -= Math.random() * 0.01;
 
-      // and the position
-      particle.z += particle.velocity.z;
-  }
+        // and the position
+        particle.z += particle.velocity.z;
+    }
 
     // flag to the particle system that vertices needs to be updated.
     particleSystem.geometry.verticesNeedUpdate = true;
 }
 
 var pickedMesh, lastPickedMesh;
+
 function checkForInterections() {
     // calculate objects intersecting the picking ray
     camera.updateProjectionMatrix();
@@ -264,14 +272,12 @@ function updateInfoOnScreen() {
         // find out county name:
         var population = pickedMesh.census.population;
 
-        $('#total-counter').addClass('activated').text( pickedMesh.census.population );
-        $('#male-counter').addClass('activated').text( pickedMesh.census.male );
-        $('#female-counter').addClass('activated').text( pickedMesh.census.female );
+        $('#total-counter').addClass('activated').text(pickedMesh.census.population);
+        $('#male-counter').addClass('activated').text(pickedMesh.census.male);
+        $('#female-counter').addClass('activated').text(pickedMesh.census.female);
         $('.census-tract').show();
         $('.census-tract>i').text(pickedMesh.census.tract);
-    }
-
-    else {
+    } else {
         resetInfoOnScreen();
     }
 }
@@ -287,27 +293,27 @@ function resetInfoOnScreen() {
 
 function camAnimationCompleted() {
     // mouseIn event
-    $('.counter-trigger').hover(function(){
-        // set counter value
-        var target = $('#'+this.getAttribute('target'));
-        var property = target.attr('property');
-        var value = statistics[property];
-        target.text(value);
-        target.addClass('activated');
+    $('.counter-trigger').hover(function() {
+            // set counter value
+            var target = $('#' + this.getAttribute('target'));
+            var property = target.attr('property');
+            var value = statistics[property];
+            target.text(value);
+            target.addClass('activated');
 
-        // temporarily pause ray-mesh interesection check
-        window.removeEventListener('mousemove', onMouseMove, false);
+            // temporarily pause ray-mesh interesection check
+            window.removeEventListener('mousemove', onMouseMove, false);
 
-        // start animation
-        animateAllMapObjectsIn(property);
+            // start animation
+            animateAllMapObjectsIn(property);
 
-    },
-    // mouseOut event
-    function() {
-    animateAllMapObjectsOut();
-    // resume intersection check.
-    window.addEventListener('mousemove', onMouseMove, false);
-    });
+        },
+        // mouseOut event
+        function() {
+            animateAllMapObjectsOut();
+            // resume intersection check.
+            window.addEventListener('mousemove', onMouseMove, false);
+        });
 
     $('#overlay').fadeIn(300, function() {
         window.addEventListener('mousemove', onMouseMove, false);
@@ -319,8 +325,7 @@ function camAnimationCompleted() {
         if (showParticles) {
             showParticles = false;
             scene.remove(particleSystem);
-        }
-        else {
+        } else {
             showParticles = true;
             scene.add(particleSystem);
         }
@@ -328,6 +333,7 @@ function camAnimationCompleted() {
 }
 
 var duration = 350;
+
 function animateMapObjects() {
     TWEEN.update();
 
@@ -341,7 +347,9 @@ function animateMapObjects() {
         // picked another object
         if (pickedMesh) {
             var extrudeAnim = new TWEEN.Tween(pickedMesh.scale);
-            extrudeAnim.to({z: 15}, duration);
+            extrudeAnim.to({
+                z: 15
+            }, duration);
             extrudeAnim.easing(TWEEN.Easing.Cubic.InOut);
             extrudeAnim.start();
 
@@ -349,7 +357,9 @@ function animateMapObjects() {
         // last object isnt null, animate it back to original
         if (lastPickedMesh) {
             var shrinkAnim = new TWEEN.Tween(lastPickedMesh.scale);
-            shrinkAnim.to({z: 1}, duration);
+            shrinkAnim.to({
+                z: 1
+            }, duration);
             shrinkAnim.easing(TWEEN.Easing.Cubic.InOut);
             shrinkAnim.start();
 
@@ -358,27 +368,29 @@ function animateMapObjects() {
     }
 }
 
-function animateAllMapObjectsIn(property)
-{
-    var key = 'proportion_to_max_'+ property;
+function animateAllMapObjectsIn(property) {
+    var key = 'proportion_to_max_' + property;
     TWEEN.removeAll();
     for (i = 0; i < mapGroup.children.length; i++) {
         var mesh = mapGroup.children[i];
         var proportion = mesh.census[key];
         var globalAnim = new TWEEN.Tween(mesh.scale);
-        globalAnim.to({z: 14*proportion + 1}, duration);
+        globalAnim.to({
+            z: 14 * proportion + 1
+        }, duration);
         globalAnim.easing(TWEEN.Easing.Cubic.InOut);
         globalAnim.start();
     }
 }
 
-function animateAllMapObjectsOut()
-{
+function animateAllMapObjectsOut() {
     TWEEN.removeAll();
     for (i = 0; i < mapGroup.children.length; i++) {
         var mesh = mapGroup.children[i];
         var globalAnim = new TWEEN.Tween(mesh.scale);
-        globalAnim.to({z: 1}, duration + (Math.random()-0.5)*400);
+        globalAnim.to({
+            z: 1
+        }, duration + (Math.random() - 0.5) * 400);
         globalAnim.easing(TWEEN.Easing.Cubic.InOut);
         globalAnim.start();
     }
