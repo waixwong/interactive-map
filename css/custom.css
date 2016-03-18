@@ -1,11 +1,12 @@
-/* Put your custom styles here */
-
 body {
     background-color: #222;
 }
 h1, h2 {
     font-family: 'Roboto', Helvetica, "Open Sans", Arial, sans-serif;
-    font-weight: 300;
+    font-weight: lighter;
+}
+button:focus {
+    outline: none!important;
 }
 .census-tract {
     font-size: 16pt;
@@ -15,7 +16,6 @@ h1, h2 {
     color: #f241a8;
 }
 .counter-block .fa {
-    color: #555555;
     font-size: 30pt;
 }
 .counter-block .counter-icon {
@@ -23,7 +23,6 @@ h1, h2 {
 }
 .content-2-7 .counter {
     font-size: 20pt;
-    color: #555555;
     font-family: roboto;
     font-weight: 300;
 }
@@ -35,7 +34,6 @@ h1, h2 {
     background-color: transparent;
 }
 #container {
-    background-color: rgba(153, 195, 141, 0.61);
     position: relative;
 }
 #container canvas, #overlay {
@@ -64,20 +62,18 @@ h1, h2 {
 .counter-block {
     border: 2px solid #f241a8;
     border-radius: 10px;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 .underlined-title .subtitle {
     font-weight: 300;
     color: #888;
     margin-bottom: 10px;
 }
-.first-counter {
-    padding-left: 0;
+
+.counter {
+    font-weight: normal;
 }
-.counter {}
-.copyright-bar {
-    position: fixed;
-}
+
 .showbtn {
     border: 2px solid #f241a8;
     background: transparent;

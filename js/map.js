@@ -195,8 +195,8 @@ function animateCamera() {
     var camAnim1 = new TWEEN.Tween(camera.position);
     camAnim1.to({
         x: 0.5,
-        y: -45,
-        z: 45
+        y: -45.0,
+        z: 45.0
     }, 3000).onUpdate(function() {
         camera.lookAt(target);
     });
@@ -207,9 +207,9 @@ function animateCamera() {
 
     var camAnim2 = new TWEEN.Tween(target).to({
         x: 0.5,
-        y: 4,
-        z: 1
-    }, 2600);
+        y: 4.0,
+        z: 1.0
+    }, 3000);
     camAnim2.easing(TWEEN.Easing.Cubic.InOut);
     camAnim2.delay(1000);
 
