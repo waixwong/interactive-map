@@ -79,7 +79,7 @@ function init() {
                         // Only add point that's within the bound of Bernallio county.
                         if (min[0]<coordinates[0] && coordinates[0] < max[0] && min[1]<coordinates[1] && coordinates[1] < max[1]){
                             var particle = new THREE.Vector3(coordinates[0], coordinates[1], 0);
-                            particle.velocity = new THREE.Vector3(0,0,-Math.random());
+                            particle.velocity = new THREE.Vector3(0,0,-Math.random()*0.5);
                             particles.vertices.push(particle);
 
                         }
@@ -99,10 +99,10 @@ function init() {
             }
 
             var pMaterial = new THREE.PointsMaterial({
-                color: 0xa2f153, // twitter color
+                color: 0xeafcd9, // twitter color
                   size: 0.2,
                   blending: THREE.AdditiveBlending,
-                  //transparent: true
+                  transparent: true
                 });
 
             particleSystem.geometry = particles;
@@ -250,13 +250,13 @@ function animateParticles () {
       var particle = particles.vertices[pCount];
 
       // check if we need to reset
-      if (particle.z < -15.0) {
+      if (particle.z < -10.0) {
           particle.z = 0;
           particle.velocity.z = 0;
       }
 
       // update the velocity with a splat of randomniz
-      particle.velocity.z -= Math.random() * 0.1;
+      particle.velocity.z -= Math.random() * 0.01;
 
       // and the position
       particle.z += particle.velocity.z;
